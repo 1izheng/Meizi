@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Meizi</string>
+
+
+    <string name="nav_open">open</string>
+    <string name="nav_close">close</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:contentPadding="4dp"
+    app:cardCornerRadius="2dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardElevation="3dp"
+    android:layout_margin="4dp"
+    >
+
+    <com.yjz.meizi.view.RatioImageView
+        android:id="@+id/iv_mz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        app:imageRatio="0.7"
+        app:imageRatioType="widthHeight"
+        />
+
+</android.support.v7.widget.CardView>
