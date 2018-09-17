@@ -2,10 +2,9 @@ package com.yjz.meizi.adapter;
 
 import android.content.Context;
 
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.yjz.meizi.R;
 import com.yjz.meizi.model.Meizi;
-import com.yjz.meizi.utils.imageloader.GlideApp;
+import com.yjz.meizi.utils.imageloader.ImageLoader;
 import com.yjz.meizi.view.RatioImageView;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -43,12 +42,12 @@ public class MeiziAdapter extends CommonAdapter<Meizi> {
             imageView.setImageRatio(0.6f);
         }
 
-        GlideApp.with(imageView.getContext()).load(meizi.getUrl())
+        ImageLoader.getInstance()
+                .load(meizi.getUrl())
                 .placeholder(R.color.gray).error(R.color.gray)
                 .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade())
+                .crossFade()
                 .into(imageView);
-
     }
 
 

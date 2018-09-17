@@ -1,8 +1,6 @@
 package com.yjz.meizi.utils.imageloader;
 
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -20,16 +18,25 @@ public class GlideLoader implements ILoaderStrategy {
 
     @Override
     public void loadImage(LoaderOptions options) {
+
+        Context mContext = null;
+        if (options.targetView instanceof ImageView) {
+            mContext = options.targetView.getContext();
+        } else if (options.bitmapCallBack != null) {
+            mContext = options.mContext;
+        }
+
         GlideRequest glideRequest = null;
         if (options.url != null) {
-            glideRequest = GlideApp.with(options.targetView.getContext()).load(options.uri);
+            glideRequest = GlideApp.with(mContext).load(options.url);
         } else if (options.file != null) {
-            glideRequest = GlideApp.with(options.targetView.getContext()).load(options.file);
+            glideRequest = GlideApp.with(mContext).load(options.file);
         } else if (options.drawableResId != 0) {
-            glideRequest = GlideApp.with(options.targetView.getContext()).load(options.drawableResId);
+            glideRequest = GlideApp.with(mContext).load(options.drawableResId);
         } else if (options.uri != null) {
-            glideRequest = GlideApp.with(options.targetView.getContext()).load(options.uri);
+            glideRequest = GlideApp.with(mContext).load(options.uri);
         }
+
 
         if (options.sizeHeight > 0 && options.sizeWidth > 0) {
             glideRequest.override(options.sizeWidth, options.sizeHeight);
@@ -68,7 +75,7 @@ public class GlideLoader implements ILoaderStrategy {
     }
 
 
-    class GlideBitmapCallback extends SimpleTarget<Bitmap> {
+    class GlideBitmapCallback<T> extends SimpleTarget<T> {
 
         BitmapCallBack bitmapCallBack;
 
@@ -77,7 +84,7 @@ public class GlideLoader implements ILoaderStrategy {
         }
 
         @Override
-        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+        public void onResourceReady(T resource, Transition<? super T> transition) {
             if (this.bitmapCallBack != null) {
                 bitmapCallBack.onBitmapLoaded(resource);
             }

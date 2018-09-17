@@ -1,5 +1,7 @@
 package com.yjz.meizi.utils.imageloader;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
@@ -15,6 +17,7 @@ import java.io.File;
  */
 public class LoaderOptions {
 
+    public Context mContext;
     public int placeholderResId;
     public int errorResId;
     public boolean isCenterCrop;
@@ -68,7 +71,13 @@ public class LoaderOptions {
         ImageLoader.getInstance().loadOptions(this);
     }
 
-    public void bitmap(BitmapCallBack bitmapCallBack) {
+    public void getBitmap(Context context, BitmapCallBack<Bitmap> bitmapCallBack) {
+        this.mContext = context;
+        this.bitmapCallBack = bitmapCallBack;
+        ImageLoader.getInstance().loadOptions(this);
+    }
+    public void getDrawable(Context context, BitmapCallBack<Drawable> bitmapCallBack) {
+        this.mContext = context;
         this.bitmapCallBack = bitmapCallBack;
         ImageLoader.getInstance().loadOptions(this);
     }
