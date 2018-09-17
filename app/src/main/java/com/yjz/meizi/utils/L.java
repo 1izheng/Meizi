@@ -57,16 +57,16 @@ public class L {
 
     public static void d(String tag, String msg) {
         if (isDebug)
-            Log.i(tag, getDebugInfo() + msg);
+            Log.d(tag, getDebugInfo() + msg);
     }
 
     public static void e(String tag, String msg) {
         if (isDebug)
-            Log.i(tag, getDebugInfo() + msg);
+            Log.e(tag, getDebugInfo() + msg);
     }
 
     public static void v(String tag, String msg) {
         if (isDebug)
-            Log.i(tag, getDebugInfo() + msg);
+            Log.v(tag, getDebugInfo() + msg);
     }
 }

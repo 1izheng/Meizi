@@ -1,13 +1,19 @@
 package com.yjz.meizi.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.github.ielse.imagewatcher.ImageWatcher;
 import com.github.ielse.imagewatcher.ImageWatcherHelper;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
@@ -27,13 +33,21 @@ import com.yjz.meizi.http.RxSchedulers;
 import com.yjz.meizi.model.Meizi;
 import com.yjz.meizi.utils.ImageWacherLoader;
 import com.yjz.meizi.utils.L;
+import com.yjz.meizi.utils.PathUtils;
+import com.yjz.meizi.utils.To;
 import com.yjz.meizi.utils.Urls;
+import com.yjz.meizi.utils.Utils;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -83,6 +97,26 @@ public class MeiziFragment extends LazyFragment {
         });
 
         imageWatcherHelper = ImageWatcherHelper.with(getActivity(), new ImageWacherLoader());
+        imageWatcherHelper.setOnPictureLongPressListener(new ImageWatcher.OnPictureLongPressListener() {
+            @Override
+            public void onPictureLongPress(ImageView imageView, final Uri uri, int i) {
+
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("保存到相册?")
+                        .setNegativeButton("保存", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                saveToAlbum(uri);
+                            }
+                        }).setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
+        });
+
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         meiziAdapter = new MeiziAdapter(getActivity(), new ArrayList<Meizi>());
         recyclerView.setAdapter(meiziAdapter);
@@ -121,8 +155,53 @@ public class MeiziFragment extends LazyFragment {
         });
     }
 
+    /**
+     * 保存图片到相册
+     *
+     * @param uri
+     */
+    private void saveToAlbum(final Uri uri) {
+
+        Observable.create(new ObservableOnSubscribe<File>() {
+            @Override
+            public void subscribe(ObservableEmitter<File> e) throws Exception {
+                final File file = Glide.with(Utils.getContext()).asFile().load(uri).submit().get();
+                String newFilePath = PathUtils.getPicturePathByCurrentTime();
+                File newFile = new File(newFilePath);
+                PathUtils.writeFileFromIS(newFile, new FileInputStream(file));
+                //发送广播刷新图片
+                MediaStore.Images.Media.insertImage(mActivity.getContentResolver(), newFile.getAbsolutePath(), newFile.getName(), "");
+                getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(newFile.getParent())));
+                e.onNext(newFile);
+            }
+        }).compose(RxSchedulers.<File>io2Main(this)).subscribe(new Observer<File>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(File file) {
+                To.showLongToast("保存成功");
+                L.d("##########--->", file.getPath());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                To.showLongToast("保存失败");
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+    }
+
     @Override
     protected void lazyLoadData() {
+        L.d("##########--->","加载数据~");
         refreshData();
         setLoaded();
     }
@@ -158,7 +237,7 @@ public class MeiziFragment extends LazyFragment {
     /**
      * 从api接口获取数据
      */
-    private void loadFromApi(){
+    private void loadFromApi() {
         HttpHelper.get().getApiService()
                 .loadMeizi(size, page)
                 .compose(RxSchedulers.<BaseResponse<List<Meizi>>>io2Main(this))
@@ -187,7 +266,8 @@ public class MeiziFragment extends LazyFragment {
      */
     private void loadFromHtml() {
         String url = Urls.getLoadUrl(type, tabPosition, page);
-        RxJsoupNetWork.getInstance().getApi(url,type)
+        L.d("##########--->","url:--->"+url);
+        RxJsoupNetWork.getInstance().getApi(url, type)
                 .compose(RxSchedulers.<List<Meizi>>io2Main(this))
                 .subscribe(new Observer<List<Meizi>>() {
                     @Override
@@ -223,10 +303,10 @@ public class MeiziFragment extends LazyFragment {
             refreshLayout.setNoMoreData(false);
         } else {
             meiziAdapter.addDatas(result);
-            if (result.size() < size) {
+            /*if (result.size() < size) {
                 //没有更多
                 refreshLayout.setNoMoreData(true);
-            }
+            }*/
         }
     }
 

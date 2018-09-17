@@ -1,5 +1,7 @@
 package com.yjz.meizi.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -39,9 +41,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private static final String TAG_DOUBAN = "douban";
     private static final String TAG_GANKIO = "gank.io";
-    private static final String[] fragmentTags = new String[]{TAG_DOUBAN, TAG_GANKIO};
+    private static final String TAG_MEIZITU = "meizitu";
+    private static final String TAG_KANMEIZI = "kanmeizi";
+    private static final String[] fragmentTags = new String[]{TAG_DOUBAN, TAG_GANKIO,TAG_MEIZITU,TAG_KANMEIZI};
 
-    private MeiziMainFragment doubanFragment, gankFragment, maizituFragment;
+    private MeiziMainFragment doubanFragment, gankFragment, maizituFragment,kanmeiziFragment;
+
+    public static void go(Context context) {
+        Intent starter = new Intent(context, MainActivity.class);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int setLayoutId() {
@@ -60,7 +69,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void initData() {
-        MenuItem item = navMenu.getMenu().findItem(R.id.nav_douban);
+        MenuItem item = navMenu.getMenu().findItem(R.id.nav_gank);
         item.setChecked(true);
         setSelectFragment(0);
     }
@@ -90,12 +99,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_douban) {
+        if (id == R.id.nav_gank) {
             setSelectFragment(0);
-        } else if (id == R.id.nav_gank) {
+        } else if (id == R.id.nav_douban) {
             setSelectFragment(1);
         } else if (id == R.id.nav_meizitu) {
             setSelectFragment(2);
+        }else if(id == R.id.nav_kanmeizi){
+            setSelectFragment(3);
         }
 
         drawerlayout.closeDrawer(GravityCompat.START);
@@ -109,25 +120,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         hideFragments(manager, transaction);
         switch (position) {
             case 0:
-                if (doubanFragment == null) {
-                    doubanFragment = MeiziMainFragment.newInstance(Urls.TYPE_DOUBAN);
-                    transaction.add(R.id.fl_content, doubanFragment, TAG_DOUBAN);
-                }
-                transaction.show(doubanFragment);
-                break;
-            case 1:
                 if (gankFragment == null) {
                     gankFragment = MeiziMainFragment.newInstance(Urls.TYPE_GANK);
                     transaction.add(R.id.fl_content, gankFragment, TAG_GANKIO);
                 }
                 transaction.show(gankFragment);
                 break;
+            case 1:
+            if (doubanFragment == null) {
+                    doubanFragment = MeiziMainFragment.newInstance(Urls.TYPE_DOUBAN);
+                    transaction.add(R.id.fl_content, doubanFragment, TAG_DOUBAN);
+                }
+            transaction.show(doubanFragment);
+            break;
             case 2:
                 if (maizituFragment == null) {
                     maizituFragment = MeiziMainFragment.newInstance(Urls.TYPE_MEIZITU);
-                    transaction.add(R.id.fl_content, maizituFragment, TAG_GANKIO);
+                    transaction.add(R.id.fl_content, maizituFragment, TAG_MEIZITU);
                 }
                 transaction.show(maizituFragment);
+                break;
+            case 3:
+                if (kanmeiziFragment == null) {
+                    kanmeiziFragment = MeiziMainFragment.newInstance(Urls.TYPE_KANMEIZI);
+                    transaction.add(R.id.fl_content, kanmeiziFragment, TAG_KANMEIZI);
+                }
+                transaction.show(kanmeiziFragment);
                 break;
 
         }
@@ -143,6 +161,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
     }
-
 
 }

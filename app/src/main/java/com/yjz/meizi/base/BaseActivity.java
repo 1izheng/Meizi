@@ -78,11 +78,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         hideSoftInput(this);
@@ -96,12 +91,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if(useEventBus()){
             EventBus.getDefault().unregister(this);
         }
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
 

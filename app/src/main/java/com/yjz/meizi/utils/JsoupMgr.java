@@ -36,6 +36,8 @@ public class JsoupMgr {
                 return getDoubanMeizi();
             case Urls.TYPE_MEIZITU:
                 return getMeizitu();
+            case Urls.TYPE_KANMEIZI:
+                return getDoubanMeizi();
             default:
                 return new ArrayList<>();
         }
@@ -57,8 +59,7 @@ public class JsoupMgr {
     public List<Meizi> getMeizitu() {
         List<Meizi> listModels = new ArrayList<>();
         Meizi imageListModel;
-        Elements elements = document.select("div#page").select("div#content").select("div.container")
-                .select("div.entry-content").select("div.rgg-imagegrid").select("a");
+        Elements elements = document.select("div.entry-thumb").select("a");
         L.d("##########--->", elements.size() + "---elements.size()");
         for (Element element : elements) {
             imageListModel = new Meizi();

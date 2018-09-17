@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_gank"
+            android:icon="@drawable/ic_launcher"
+            android:title="Gank.io"/>
+        <item
             android:id="@+id/nav_douban"
             android:icon="@drawable/ic_launcher"
             android:title="豆瓣妹子"/>
@@ -11,13 +15,9 @@
             android:icon="@drawable/ic_launcher"
             android:title="妹子图"/>
         <item
-            android:id="@+id/nav_gank"
+            android:id="@+id/nav_kanmeizi"
             android:icon="@drawable/ic_launcher"
-            android:title="Gank.io"/>
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_launcher"
-            android:title="Tools"/>
+            android:title="看妹子"/>
     </group>
 
     <item android:title="Communicate">

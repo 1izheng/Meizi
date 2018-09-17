@@ -2,7 +2,7 @@ package com.yjz.meizi.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.yjz.meizi.ui.fragment.MeiziFragment;
 import com.yjz.meizi.utils.Urls;
@@ -12,7 +12,7 @@ import com.yjz.meizi.utils.Urls;
  *         created at 2018/9/8 下午2:25
  */
 
-public class BaseFragmentAdapter extends FragmentPagerAdapter {
+public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
 
     private String[] mTitles;
     private int type;

@@ -2,10 +2,8 @@ package com.yjz.meizi.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
-import com.yjz.meizi.utils.Utils;
-import com.yjz.meizi.utils.imageloader.GlideLoader;
-import com.yjz.meizi.utils.imageloader.ImageLoader;
 import com.kingja.loadsir.core.LoadSir;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -14,8 +12,12 @@ import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
 import com.scwang.smartrefresh.layout.api.RefreshFooter;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.squareup.leakcanary.LeakCanary;
+import com.yjz.meizi.R;
+import com.yjz.meizi.utils.Utils;
+import com.yjz.meizi.utils.imageloader.GlideLoader;
+import com.yjz.meizi.utils.imageloader.ImageLoader;
 
 /**
  * @author lizheng
@@ -23,17 +25,16 @@ import com.squareup.leakcanary.LeakCanary;
  */
 public class App extends Application {
 
+
     @Override
     public void onCreate() {
         super.onCreate();
-        Utils.init(this);
-        initLoadSir();
         if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
             return;
         }
         LeakCanary.install(this);
+        Utils.init(this);
+        initLoadSir();
         //初始化图片加载框架
         ImageLoader.getInstance().setImageLoader(new GlideLoader());
     }
@@ -52,24 +53,24 @@ public class App extends Application {
         SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
             @Override
             public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
-//                layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);//全局设置主题颜色
                 //下拉内容不偏移
                 layout.setEnableHeaderTranslationContent(false);
                 layout.setEnableAutoLoadMore(false);
-                layout.setEnableOverScrollBounce(false);//关闭越界回弹功能
+                //关闭越界回弹功能
+                layout.setEnableOverScrollBounce(false);
                 layout.setReboundDuration(300);
-                layout.setEnableAutoLoadMore(true); //滑动底部自动加载更多
+                //滑动底部自动加载更多
+                layout.setEnableAutoLoadMore(true);
                 return new MaterialHeader(context);
-//                return new ClassicsHeader(context).setTextSizeTitle(14).setEnableLastTime(false);
             }
         });
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
             @Override
             public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
-                return new ClassicsFooter(context).setTextSizeTitle(14);
+                return new BallPulseFooter(context)
+                        .setAnimatingColor(ContextCompat.getColor(context, R.color.colorPrimary));
             }
         });
-
     }
 }

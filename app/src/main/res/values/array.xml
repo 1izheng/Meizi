@@ -9,6 +9,22 @@
         <item>黑丝袜</item>
     </string-array>
 
+
+    <string-array name="kanmeizi_array">
+        <item>大胸妹</item>
+        <item>小翘臀</item>
+        <item>小牛仔</item>
+        <item>黑丝控</item>
+        <item>卡哇伊</item>
+        <item>冰美人</item>
+        <item>性感腰</item>
+        <item>美腿</item>
+        <item>气质女</item>
+        <item>骨感</item>
+        <item>紧身控</item>
+        <item>文艺</item>
+    </string-array>
+
     <string-array name="gank_io_array">
         <item>Gank.io</item>
     </string-array>

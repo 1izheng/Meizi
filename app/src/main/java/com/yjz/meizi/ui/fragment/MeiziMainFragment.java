@@ -3,10 +3,10 @@ package com.yjz.meizi.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
+import com.flyco.tablayout.SlidingTabLayout;
 import com.yjz.meizi.R;
 import com.yjz.meizi.adapter.BaseFragmentAdapter;
 import com.yjz.meizi.base.BaseFragment;
-import com.flyco.tablayout.SlidingTabLayout;
 
 import butterknife.BindView;
 
@@ -44,8 +44,8 @@ public class MeiziMainFragment extends BaseFragment {
     protected void initView() {
         BaseFragmentAdapter adapter = new BaseFragmentAdapter(getChildFragmentManager(), type);
         viewpager.setAdapter(adapter);
-        viewpager.setOffscreenPageLimit(adapter.getCount());
         tabs.setViewPager(viewpager);
+        viewpager.setOffscreenPageLimit(adapter.getCount());
     }
 
 
